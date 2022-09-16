@@ -34,7 +34,7 @@ nt = Length[MeshCells[mesh,2]];  (*number of triangles*)
 
 接着计算并储存带有三角形形状信息的相对坐标。
 
-![image-20220914000520672](C:\Users\dada\Desktop\scholar\图形学\as rigid as possible\image-20220914000520672.png)
+![image-20220914000520672](image-20220914000520672.png)
 
 这里独特的函数式编程与新奇的映射方法很有趣。
 
@@ -57,7 +57,7 @@ nfree=nv-nfixed;
 
 接下来开始求G
 
-![image-20220914000600292](C:\Users\dada\Desktop\scholar\图形学\as rigid as possible\image-20220914000600292.png)
+![image-20220914000600292](image-20220914000600292.png)
 
 mathematica直接对数学表达式进行操作（“所见即所得”）的特性，使得系数矩阵也十分容易求。需要注意的只剩相乘时vertex向量的顺序问题。
 
@@ -90,7 +90,7 @@ G01=Take[G,{1,2nfree},{2nfree+1,2nv}];
 amazingMetrix=Inverse[G00].G01;
 ```
 
-![image-20220914000631879](C:\Users\dada\Desktop\scholar\图形学\as rigid as possible\image-20220914000631879.png)
+![image-20220914000631879](image-20220914000631879.png)
 
 然后根据上图实现动态可视化即可。
 
@@ -130,7 +130,7 @@ Step two也分为两部分：首先将最初的三角形全等地放置到Step1�
 
 第一部分，保证局部三角形的全等。
 
-![image-20220914000703184](C:\Users\dada\Desktop\scholar\图形学\as rigid as possible\image-20220914000703184.png)
+![image-20220914000703184](image-20220914000703184.png)
 
 ```mathematica
 (*the coordinates had been worked out*)
@@ -146,15 +146,15 @@ normOfFirstVectors=Array[Norm[MeshPrimitives[mesh,2][[#]][[1]][[2]]-MeshPrimitiv
 scaledTriangle[fittedTriangle_,i_]:=ScalingTransform[{normOfFirstVectors[[i]],normOfFirstVectors[[i]]}/Norm[fittedTriangle[[2]]-fittedTriangle[[1]]],Total[fittedTriangle]/3][fittedTriangle];
 ```
 
-![image-20220914000726389](C:\Users\dada\Desktop\scholar\图形学\as rigid as possible\image-20220914000726389.png)
+![image-20220914000726389](image-20220914000726389.png)
 
 由于这是一个简单的线性方程组，新的坐标可以直接解出来，然后等比缩放回原大小就行了。此处经过资料查阅，缩放时位似中心选为三角形重心较合适，这是论文里没有指出的。
 
 第二部分，保证整体的损失最小。
 
-![image-20220914000815441](C:\Users\dada\Desktop\scholar\图形学\as rigid as possible\image-20220914000815441.png)
+![image-20220914000815441](image-20220914000815441.png)
 
-![image-20220914000835867](C:\Users\dada\Desktop\scholar\图形学\as rigid as possible\image-20220914000835867.png)
+![image-20220914000835867](image-20220914000835867.png)
 
 接下来就是求解新error函数的最小值，与之前如出一辙。
 
